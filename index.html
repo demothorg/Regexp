@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src="./vis.js"></script>
+
+    <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./seedrandom.js"></script>
+
+    <script type="text/javascript" src="./index.js"></script>
+    <script type="text/javascript" src="./tree.js"></script>
+    <script type="text/javascript" src="./automata.js"></script>
+    <script type="text/javascript" src="./dfa.js"></script>
+    <script type="text/javascript" src="./test.js"></script>
+
+    <style type="text/css">
+        body, html {
+            font: 11pt sans;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            color: #000000;
+        }
+        button {
+            font-size: 10pt;
+            font-family: Arial;
+        }
+        #frame {
+            width: 100%;
+            height: 99%;
+        }
+        #frame tr {
+            height: 0px;
+        }
+        #automata_input {
+            border: 1px solid #d3d3d3;
+            font-family: Consolas;
+            font-size: 11pt;
+            width: 100%;
+            height: 100%;
+        }
+        input.regedit {
+            font-family: Consolas;
+            font-size: 11pt;
+            width: 100%;
+        }
+        #mynetwork {
+            float: left;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<table id="frame">
+    <col width="50%">
+    <col width="50%">
+    <tr>
+        <td colspan="2">
+            <button id="button_save">Save</button>
+            <button id="button_load">Load</button>
+            <button id="button_test">Test</button>
+            <hr>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="height:0px; width: 100%">
+                <tr>
+                    <td align="right">RegExp:</td><td width="100%"><input class="regedit" id="regex_input" type="edit" value=""></input></td>
+                </tr>
+                <tr>
+                    <td align="right">Output:</td><td width="100%"><input class="regedit" id="regex_output" type="edit" value="" disabled></input></td>
+                </tr>
+            </table>
+            <button id="button_optimize">Optimize</button>
+            <button id="button_optimize_old">Optimize Old</button><br>
+            <button id="button_copy">Copy</button>
+            <button id="button_regtoa">&darr;</button>
+            <button id="button_atoreg">&uarr;</button>
+            <button id="button_opt1">DFA</button>
+            <button id="button_opt2">DFA &darr;</button>
+        </td>
+        <td>
+            <table style="height:0px; width: 100%">
+                <tr>
+                    <td align="right">&sum;={</td><td><input size="15" style="width: auto" class="regedit" id="regex_alpha" type="edit" value=""></input>}</td>
+                </tr>
+                <tr>
+                    <td align="right">R<sub>1</sub>=</td><td width="100%"><input class="regedit" id="regex_r1" type="edit" value=""></input></td>
+                </tr>
+                <tr>
+                    <td align="right">R<sub>2</sub>=</td><td width="100%"><input class="regedit" id="regex_r2" type="edit" value=""></input></td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <button id="button_inter">R<sub>1</sub>&cap;R<sub>2</sub></button>
+                        <button id="button_union">R<sub>1</sub>&cup;R<sub>2</sub></button>
+                        <button id="button_subtr">R<sub>1</sub>\R<sub>2</sub></button>
+                        <button id="button_equal">R<sub>1</sub>=R<sub>2</sub>?</button>
+                        <button id="button_not">&not;R<sub>1</sub></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Result:</td><td width="100%"><input class="regedit" id="regex_result" type="edit" disabled></input>         </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            Automata:
+        </td>
+    </tr>
+    <tr style="height: 100%">
+        <td>
+            <textarea id="automata_input"></textarea>
+        </td>
+        <td>
+            <div id="mynetwork"></div>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    var network, data;
+
+    // resize the network when window resizes
+    window.onresize = function () {
+        setTimeout(draw, 500);
+    };
+
+    // parse and draw the data
+    function draw (txtData) {
+        //return;
+        if (txtData != undefined) {
+            data = {
+              dot: txtData
+            };
+        }
+
+        Math.seedrandom("123");
+        try {
+            network = new vis.Network($('#mynetwork')[0], data, {
+                //smoothCurves: { dynamic: false, type: "diagonalCross", roundness: 0.5 },
+                physics: {
+                    barnesHut: {// gravitationalConstant:0, springConstant:0, centralGravity: 0
+                        enabled: true,
+                        centralGravity: 0.2
+                        //damping: 0.2,
+                        //springConstant: 0.005,
+                        //gravitationalConstant: -1000,
+                    }
+                }
+                //hierarchicalLayout: {enabled: true, layout: "hubsize"},
+                //configurePhysics:false
+            });
+            network.setOptions({stabilize: true});
+            //network.setOptions({smoothCurves:{type:"diagonalCross", dynamic: false, roundness: 0.2}});
+        }
+        catch (err) {
+            console.log(err+"");
+        }
+    }
+
+    window.drawNetwork = draw;
+</script>
+
+</body>
+
+
+</html>
