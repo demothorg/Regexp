@@ -1,5 +1,5 @@
 # RegExp
-Program to work with regular expression (in math style) and finite state machines. Site: http://demoth.org/regexp
+Program to work with regular expression (in math style) and finite state machines. Site: https://demothorg.github.io/regexp/
 
 ##Regular expressions format
 - abc -- concatination,
